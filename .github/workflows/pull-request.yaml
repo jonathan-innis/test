@@ -1,18 +1,25 @@
-name: Tag
+name: PullRequest
 on:
   workflow_dispatch:
 jobs:
     tag:
         permissions:
             pull-requests: write
+            contents: write
         runs-on: ubuntu-latest
         steps:
         - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+        - run: |
+            git config user.name "APICodeGen"
+            git config user.email "APICodeGen@users.noreply.github.com"
+            git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+            git config pull.rebase false
         - run: |
             echo "Hello there" >> output.txt
             git checkout -b another-test-branch
             git add .
             git commit -m "Apply test change on test branch"
+            git push --set-upstream origin another-test-branch
         - name: Create Pull Request
           uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
           with:
