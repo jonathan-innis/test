@@ -1,0 +1,15 @@
+name: Tag
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        type: string
+jobs:
+  tag:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        git tag ${{ inputs.tag }}
+        git push origin ${{ inputs.tag }}
